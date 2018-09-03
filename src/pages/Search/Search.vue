@@ -78,6 +78,7 @@ export default{
   }
   .search{
     width: 100%;
+    overflow: hidden;
     .search_form{
       @include clearFix();
       margin-top: 45px;
