@@ -1,19 +1,29 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
     <FooterGuide v-show="$route.meta.showFooter"></FooterGuide>
   </div>
 </template>
 
 <script>
-import FooterGuide from './components/FooterGuide/FooterGuide.vue'
+  import {mapActions} from 'vuex'
+  import FooterGuide from './components/FooterGuide/FooterGuide.vue'
+  // import {RECEIVE_ADDRESS} from './store/mutation-types'
 
-export default {
-  name: 'App',
-  components: {
-    FooterGuide
+  export default {
+    name: 'App',
+    mounted () {
+        this.getAddress();
+    },
+    methods: {
+      ...mapActions(['getAddress'])
+    },
+    components: {
+      FooterGuide
+    }
   }
-}
 </script>
 
 <style lang="scss">

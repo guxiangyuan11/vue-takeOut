@@ -1,8 +1,8 @@
-# vue-demo2
+# 基于VUE框架搭建的一个外卖项目
 
-> A demo project
+> 一个VUE练手项目
 
-## Build Setup
+## 用到技术
 
 ``` bash
 # install dependencies

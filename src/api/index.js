@@ -1,39 +1,25 @@
-/* eslint-disable no-unused-vars */
-/*
-*  ajax 请求函数
-* */
-
-/*
-* url： 请求链接
-* data：请求数据
-* type：请求类型
-* */
-import axios from 'axios'
-export default function (url, data = {}, type = 'GET') {
-  // 直接返回一个promise对象
-  return new Promise(function (resolve, reject) {
-    let promise
-    if (type === 'GET') {
-      // 准备 url query 参数数据
-      let dataStr = ''// 数据拼接字符串
-      Object.keys(data).forEach(key => {
-        dataStr += key + '=' + data[key] + '&'
-      })
-      if (dataStr !== '') {
-        dataStr = dataStr.substring(0, dataStr.lastIndexOf('&'))
-        url = url + '?' + dataStr
-      }
-      // 发送 get 请求
-      promise = axios.get(url)
-    } else {
-      // 发送 post 请求
-      promise = axios.post(url, data)
-    }
-    // 得到返回对象
-    promise.then(function (res) { // 成功回调
-      resolve(res.data)
-    }).catch(function (err) { // 失败回调
-      reject(err)
-    })
-  })
-}
+// 接口函数
+// 函数返回promise对象
+import ajax from './ajax'
+// const BASE_HTTP = 'http://localhost:4000'
+const BASE_HTTP = '/api'
+// 1、根据经纬度获取位置详情
+export const reqAddress = (geohash) => ajax(`${BASE_HTTP}/position/${geohash}`)
+// 2、获取食品分类列表
+export const reqFoodCategorys = () => ajax(`${BASE_HTTP}/index_category`)
+// 3、根据经纬度获取商铺列表
+export const reqShops = (latitude, longitude) => ajax(`${BASE_HTTP}/shops`, {latitude, longitude})
+// 4、根据经纬度和关键字搜索商铺列表
+// export const reqFoodTypes = () => ajax(`/index_category`)
+// 5、获取一次性验证码
+// export const reqFoodTypes = () => ajax(`/index_category`)
+// 6、用户名密码登陆
+// export const reqFoodTypes = () => ajax(`/index_category`)
+// 7、发送短信验证码
+// export const reqFoodTypes = () => ajax(`/index_category`)
+// 8、手机号验证码登陆
+// export const reqFoodTypes = () => ajax(`/index_category`)
+// 9、根据会话获取用户信息
+// export const reqFoodTypes = () => ajax(`/index_category`)
+// 10、用户登出
+// export const reqFoodTypes = () => ajax(`/index_category`)
