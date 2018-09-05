@@ -4,7 +4,8 @@
 import {
   RECEIVE_ADDRESS,
   RECEIVE_CATEGORYS,
-  RECEIVE_SHOPS
+  RECEIVE_SHOPS,
+  RECEIVE_USER_INFO
 } from './mutation-types'
 import {
   reqAddress,
@@ -40,5 +41,9 @@ export default {
       const shops = result.data
       commit(RECEIVE_SHOPS, {shops})
     }
+  },
+  // 同步获取用户，由于已经从登陆界面获取了用户信息所以用同步来设置用户信息
+  setShops ({commit, state}, userInfo) {
+    commit(RECEIVE_USER_INFO, {userInfo})
   }
 }

@@ -1,14 +1,18 @@
 <template>
   <div class="star" :class="'star-' + size">
-    <span class="star-item on" :class="" v-for="(star,index) in starScore" :key="index"></span>
-    <span class="star-item on"></span>
+    <span class="star-item" :class="starType" v-for="(starType,index) in starScore" :key="index"></span>
+    <!--<span class="star-item on"></span>
     <span class="star-item on"></span>
     <span class="star-item half"></span>
-    <span class="star-item off"></span>
+    <span class="star-item off"></span>-->
   </div>
 </template>
 
+
 <script>
+  const CLASS_ON = 'on'
+  const CLASS_HALF = 'half'
+  const CLASS_OFF = 'off'
     export default{
         data: function () {
             return {}
@@ -19,8 +23,22 @@
         },
         computed:{
             starScore: function () {
-              const {score} = this;
-
+              const {score} = this
+              let arr = []
+              let onNum = parseInt(score) // 打开星星的数量
+              let half = score%1 >= 0.5 ? 1 : 0 //半颗星星的数量
+              let off = 5 - onNum - half // 关闭星星的数量
+              for (let i = 0; i < onNum; i++) {
+                arr.push(CLASS_ON)
+              }
+              for (let i = 0; i < half; i++) {
+                arr.push(CLASS_HALF)
+              }
+              for (let i = 0; i < off; i++) {
+                arr.push(CLASS_OFF)
+              }
+//              console.log(arr)
+              return arr
             }
         },
         components: {},
