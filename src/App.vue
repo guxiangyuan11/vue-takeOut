@@ -15,10 +15,11 @@
   export default {
     name: 'App',
     mounted () {
-        this.getAddress();
+        this.getAddress()
+        this.getUserInfo()
     },
     methods: {
-      ...mapActions(['getAddress'])
+      ...mapActions(['getAddress', 'getUserInfo'])
     },
     components: {
       FooterGuide

@@ -13,12 +13,15 @@
       </span>
     </header>-->
     <HeaderTop :title="address.name">
-      <span class="header_search" slot="header_search">
+      <router-link class="header_search" slot="header_search" to="/search">
             <i class="iconfont icon-sousuo"></i>
-      </span>
-      <span class="header_login" slot="header_login">
-            <span class="header_login_text">登录|注册</span>
-      </span>
+      </router-link>
+      <router-link class="header_login" slot="header_login" :to="userInfo._id ? '/userInfo' : '/login'" >
+            <span class="header_login_text" v-if="!userInfo._id">登录|注册</span>
+            <span class="header_login_text" v-else>
+              <i class="iconfont icon-person"></i>
+            </span>
+      </router-link>
     </HeaderTop>
     <!--首页导航-->
     <nav class="msite_nav">
@@ -74,7 +77,7 @@ export default{
     this.$store.dispatch('getShops')
   },
   computed: {
-    ...mapState(['address', 'categorys']),
+    ...mapState(['address', 'categorys', 'userInfo']),
     categorysArr:function () {
       const {categorys} = this;
       let arr = [];

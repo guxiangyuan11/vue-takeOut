@@ -5,12 +5,21 @@ import {
   RECEIVE_ADDRESS,
   RECEIVE_CATEGORYS,
   RECEIVE_SHOPS,
-  RECEIVE_USER_INFO
+  RECEIVE_USER_INFO,
+  RESET_USER_INFO,
+  RECEIVE_INFO,
+  RECEIVE_RATINGS,
+  RECEIVE_GOODS
 } from './mutation-types'
 import {
   reqAddress,
   reqFoodCategorys,
-  reqShops
+  reqShops,
+  reqUserinfo,
+  reqLogout,
+  reqShopInfo,
+  reqShopRatings,
+  reqShopGoods
 } from '../api/index'
 export default {
   // 异步获取地址
@@ -45,5 +54,48 @@ export default {
   // 同步获取用户，由于已经从登陆界面获取了用户信息所以用同步来设置用户信息
   setShops ({commit, state}, userInfo) {
     commit(RECEIVE_USER_INFO, {userInfo})
+  },
+  // 异步获取用户信息
+  async getUserInfo ({commit, state}) {
+    // 发送异步请求
+    const result = await reqUserinfo()
+    if (result.code === 0) { // 判断是否是正确返回
+      const userInfo = result.data
+      commit(RECEIVE_USER_INFO, {userInfo})
+    }
+  },
+  // 异步登出
+  async logout ({commit, state}) {
+    // 发送异步请求
+    const result = await reqLogout()
+    if (result.code === 0) { // 判断是否是正确返回
+      commit(RESET_USER_INFO)
+    }
+  },
+  // 异步获取商家信息
+  async getShopInfo ({commit}) {
+    const result = await reqShopInfo()
+    if (result.code === 0) {
+      const info = result.data
+      info.score = 3.5
+      console.log(result)
+      commit(RECEIVE_INFO, {info})
+    }
+  },
+  // 异步获取商家评价列表
+  async getShopRatings ({commit}) {
+    const result = await reqShopRatings()
+    if (result.code === 0) {
+      const ratings = result.data
+      commit(RECEIVE_RATINGS, {ratings})
+    }
+  },
+  // 异步获取商家商品列表
+  async getShopGoods ({commit}) {
+    const result = await reqShopGoods()
+    if (result.code === 0) {
+      const goods = result.data
+      commit(RECEIVE_GOODS, {goods})
+    }
   }
 }

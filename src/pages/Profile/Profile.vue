@@ -2,12 +2,12 @@
   <section class="profile">
     <HeaderTop :title="title"></HeaderTop>
     <section class="profile-number">
-      <router-link to="/login" class="profile-link">
+      <router-link :to="userInfo._id ? '/userInfo' : '/login'" class="profile-link">
         <div class="profile_image">
           <i class="iconfont icon-person"></i>
         </div>
         <div class="user-info">
-          <p class="user-info-top">{{userInfo._id || '登录/注册'}}</p>
+          <p class="user-info-top" v-if="!userInfo.phone">{{userInfo._id || '登录/注册'}}</p>
           <p>
             <span class="user-icon">
               <i class="iconfont icon-shouji icon-mobile"></i>
@@ -88,6 +88,11 @@
         </div>
       </a>
     </section>
+
+    <section class="profile_my_order">
+      <mt-button type="danger" @click="logout" style="width: 100%" v-show="userInfo._id">退出登录</mt-button>
+    </section>
+
   </section>
 </template>
 
@@ -97,6 +102,7 @@
  */
 import {mapState} from 'vuex'
 import HeaderTop from '../../components/HeaderTop/HeaderTop.vue'
+import { MessageBox, Toast } from 'mint-ui';
 
 export default{
   data: function () {
@@ -106,6 +112,21 @@ export default{
   },
   computed:{
     ...mapState(['userInfo'])
+  },
+  methods: {
+    logout(){
+      MessageBox.confirm('确认登出吗?').then(action => {
+        // 确定回调
+        this.$store.dispatch('logout')
+        Toast({
+          message: '退出成功',
+          position: 'bottom',
+          duration: 5000
+        });
+        console.log(action)
+      }).catch(err => { // 取消回调
+      });
+    }
   },
   components: {
     HeaderTop
