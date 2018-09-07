@@ -27,7 +27,7 @@
         mounted:function () {
           this.$store.dispatch('getShopInfo')
           this.$store.dispatch('getShopRatings')
-          this.$store.dispatch('getShopGoods')
+
         },
         props: {},
         components: {ShopHeader},

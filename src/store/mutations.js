@@ -10,10 +10,31 @@ import {
   RESET_USER_INFO,
   RECEIVE_INFO,
   RECEIVE_RATINGS,
-  RECEIVE_GOODS
+  RECEIVE_GOODS,
+  INCREMENT_FOOD_COUNT,
+  DECREMENT_FOOD_COUNT
 } from './mutation-types'
-
+import Vue from 'vue'
 export default {
+  [INCREMENT_FOOD_COUNT] (state, {food}) {
+    if (!food.count) {
+      // food.count = 1 // 这样是新增的属性，所以没有双向绑定的效果
+      Vue.set(food, 'count', 1)
+      // 第一次的时候才去添加cartFoods
+      state.cartFoods.push(food)
+    } else {
+      food.count++
+    }
+  },
+  [DECREMENT_FOOD_COUNT] (state, {food}) {
+    if (food.count) { // 只有当它有值得时候才减减
+      food.count--
+      // 将food从cartFoods中删除
+      if (food.count === 0) {
+        state.cartFoods.splice(state.cartFoods.indexOf(food), 1)
+      }
+    }
+  },
   [RECEIVE_ADDRESS] (state, {address}) {
     state.address = address
   },
