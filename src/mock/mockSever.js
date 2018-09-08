@@ -10,3 +10,5 @@ Mock.mock('/goods', {code: 0, data: data.goods})
 Mock.mock('/ratings', {code: 0, data: data.ratings})
 // 商家info接口
 Mock.mock('/info', {code: 0, data: data.info})
+// // 商家搜索接口
+// Mock.mock('/search_shops', {code: 0, data: data.info})

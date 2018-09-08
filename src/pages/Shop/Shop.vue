@@ -12,7 +12,10 @@
         <router-link to="/shop/shopInfo" replace>商家</router-link>
       </div>
     </div>
-    <router-view/>
+    <keep-alive>
+      <router-view/>
+    </keep-alive>
+
   </div>
 </template>
 
@@ -25,9 +28,8 @@
             return {}
         },
         mounted:function () {
+            console.log("商家列表")
           this.$store.dispatch('getShopInfo')
-          this.$store.dispatch('getShopRatings')
-
         },
         props: {},
         components: {ShopHeader},

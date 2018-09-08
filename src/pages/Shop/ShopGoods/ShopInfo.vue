@@ -5,33 +5,22 @@
         <h3 class="section-title">配送信息</h3>
         <div class="delivery">
           <div>
-            <span class="delivery-icon">硅谷专送</span>
-            <span>由商家配送提供配送， 约 40 分钟送达， 距离 100m</span>
+            <span class="delivery-icon">{{info.description}}</span>
+            <span>由商家配送提供配送， 约 {{info.deliveryTime}} 分钟送达， 距离 {{info.distance}}</span>
           </div>
-          <div class="delivery-money">配送费￥5</div>
+          <div class="delivery-money">配送费￥{{info.deliveryPrice}}</div>
         </div>
       </section>
       <div class="split"></div>
       <section class="section">
         <h3 class="section-title">活动与服务</h3>
         <div class="activity">
-          <div class="activity-item activity-green">
+          <div class="activity-item activity-green" :class="activityClass[support.type]"
+               v-for="(support, index) in info.supports" :key="index">
             <span class="content-tag">
-            <span class="mini-tag">首单</span>
+            <span class="mini-tag">{{support.name}}</span>
             </span>
-            <span class="activity-content">新用户下单立减 17 元(不与其它活动同享)</span>
-          </div>
-          <div class="activity-item activity-red">
-            <span class="content-tag">
-            <span class="mini-tag">满减</span>
-            </span>
-            <span class="activity-content">满 35 减 19， 满 65 减 35</span>
-          </div>
-          <div class="activity-item activity-orange">
-            <span class="content-tag">
-            <span class="mini-tag">特价</span>
-            </span>
-            <span class="activity-content">【立减 19.5 元】 欢乐小食餐</span>
+            <span class="activity-content">{{support.content}}</span>
           </div>
         </div>
       </section>
@@ -39,18 +28,10 @@
       <section class="section">
         <h3 class="section-title">商家实景</h3>
         <div class="pic-wrapper">
-          <ul class="pic-list">
-            <li class="pic-item">
+          <ul class="pic-list" ref="picList">
+            <li class="pic-item" v-for="(pic,index) in info.pics" :key="index">
               <img width="120" height="90"
-                   src="https://fuss10.elemecdn.com/f/7f/d1422ec824a0a9d1fb879c57ab533jpeg.jpeg"/>
-            </li>
-            <li class="pic-item">
-              <img width="120" height="90"
-                   src="https://fuss10.elemecdn.com/f/7f/d1422ec824a0a9d1fb879c57ab533jpeg.jpeg"/>
-            </li>
-            <li class="pic-item">
-              <img width="120" height="90"
-                   src="https://fuss10.elemecdn.com/f/7f/d1422ec824a0a9d1fb879c57ab533jpeg.jpeg"/>
+                   :src="pic"/>
             </li>
           </ul>
         </div>
@@ -59,10 +40,10 @@
       <section class="section">
         <h3 class="section-title">商家信息</h3>
         <ul class="detail">
-          <li><span class="bold">品类</span> <span>包子粥店</span></li>
-          <li><span class="bold">商家电话</span> <span>13301083744</span></li>
-          <li><span class="bold">地址</span> <span>北京市丰台区</span></li>
-          <li><span class="bold">营业时间</span> <span>08:35-23:00</span></li>
+          <li><span class="bold">品类</span> <span>{{info.category}}</span></li>
+          <li><span class="bold">商家电话</span> <span>{{info.phone}}</span></li>
+          <li><span class="bold">地址</span> <span>{{info.address}}</span></li>
+          <li><span class="bold">营业时间</span> <span>{{info.workTime}}</span></li>
         </ul>
       </section>
     </div>
@@ -70,12 +51,44 @@
 </template>
 
 <script>
-
+    import {mapState} from 'vuex'
+    import BScroll from 'better-scroll'
     export default{
         data: function () {
-            return {}
+            return {
+              activityClass: ['activity-green', 'activity-red', 'activity-orange']
+            }
         },
-        props: {},
+        computed: {
+          ...mapState(['info'])
+        },
+        mounted(){
+          console.log("商家信息")
+          if(!this.info.pics){
+              return
+          }
+          this._initScroll()
+        },
+        watch: {
+            info(){
+              this._initScroll()
+            }
+        },
+        methods: {
+          _initScroll(){
+            new BScroll('.shop-info', { // 初始化商家信息页面滚动
+              click: true
+            })
+            // 计算横向滚动的宽度
+            const liWidth = 120
+            const space = 6
+            const allWidth = (liWidth+space) * this.info.pics.length - space
+            this.$refs.picList.style.width = allWidth + 'px'
+            new BScroll('.pic-wrapper', { // 初始化商家图片横向滚动
+              scrollX: true
+            })
+          }
+        },
         components: {},
         templates: {}
     }

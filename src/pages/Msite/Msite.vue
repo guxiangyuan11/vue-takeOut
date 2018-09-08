@@ -25,6 +25,7 @@
     </HeaderTop>
     <!--首页导航-->
     <nav class="msite_nav">
+      <!--有数据的时候-->
       <div class="swiper-container" v-if="categorysArr.length > 0">
         <div class="swiper-wrapper">
           <div class="swiper-slide" v-for="(categorys, index) in categorysArr" :key="index">
@@ -39,6 +40,7 @@
         <!-- Add Pagination -->
         <div class="swiper-pagination"></div>
       </div>
+      <!--没有数据的时候-->
       <img src="./images/msite_back.svg" alt="" v-else>
     </nav>
     <!--首页附近商家-->

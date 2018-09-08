@@ -41,7 +41,7 @@
     </ul>
 
     <ul v-else>
-      <li v-for="n in 5">
+      <li v-for="n in 5" :key="n">
         <img src="./images/shop_back.svg" alt="" >
       </li>
     </ul>

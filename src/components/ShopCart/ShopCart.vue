@@ -18,25 +18,30 @@
         </div>
       </div>
     </div>
-    <div class="shopcart-list" v-show="showList && cartFoods.length>0">
-      <div class="list-header">
-        <h1 class="title">购物车</h1>
-        <span class="empty">清空</span>
+    <transition name="swipe">
+      <div class="shopcart-list" v-show="showList && cartFoods.length>0">
+        <div class="list-header">
+          <h1 class="title">购物车</h1>
+          <span class="empty" @click="clearCart">清空</span>
+        </div>
+        <div class="list-content">
+          <ul>
+            <li class="food" v-for="(food, index) in cartFoods" :key="index">
+              <span class="name">{{food.name}}</span>
+              <div class="price"><span>￥{{food.price}}</span></div>
+              <div class="cartcontrol-wrapper">
+                <cartControl :food="food"></cartControl>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="list-content">
-        <ul>
-          <li class="food" v-for="(food, index) in cartFoods" :key="index">
-            <span class="name">{{food.name}}</span>
-            <div class="price"><span>￥{{food.price}}</span></div>
-            <div class="cartcontrol-wrapper">
-              <cartControl :food="food"></cartControl>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
+    </transition>
+
   </div>
-  <div class="list-mask" v-show="showList && cartFoods.length>0" @click="showCartList"></div>
+    <transition name="fade">
+      <div class="list-mask" v-show="showList && cartFoods.length>0" @click="showCartList"></div>
+    </transition>
   </div>
 
 </template>
@@ -44,6 +49,9 @@
 <script>
   import {mapState, mapGetters} from 'vuex'
   import cartControl from '../../components/cartControl/cartControl.vue'
+  import BScroll from 'better-scroll'
+  import { MessageBox, Toast } from 'mint-ui'
+
   export default{
     data: function () {
       return {
@@ -56,7 +64,6 @@
       payText(){
           let {info, totalPrice} = this
           let price = info.minPrice // 最少需要多少钱才能配送
-
           if(totalPrice===0){
             this.showList = false
             return `￥${price} 起送`
@@ -65,14 +72,40 @@
           } else {
               return '请下单'
           }
-
+      }
+    },
+    watch:{
+      showList: function (value) {
+        if(value){
+            this.$nextTick(() => {
+              if(!this.scroll){
+                this.scroll = new BScroll('.list-content', {
+                  click: true
+                })
+              } else {
+                this.scroll.refresh() // 刷新滚动，重新计算DOM高度
+              }
+            })
+        }
       }
     },
     methods:{
-      showCartList(){
+      showCartList(){ // 打開列表
         if(this.totalCount>0){
           this.showList = !this.showList
         }
+      },
+      clearCart() { // 清空列表
+        MessageBox.confirm('确清空购物列表吗?').then(action => {
+          // 确定回调
+          this.$store.dispatch('clearCart')
+          Toast({
+            message: '清空成功',
+            position: 'bottom',
+            duration: 3000
+          });
+        }).catch(err => { // 取消回调
+        });
       }
     },
     components: {

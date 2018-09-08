@@ -1,5 +1,6 @@
 <template>
   <div class="food" v-if="isShow">
+    <transition name="fade">
       <div class="food-content">
         <div class="image-header">
           <img
@@ -24,7 +25,11 @@
           </div>
         </div>
       </div>
+    </transition>
+    <transition name="fade">
       <div class="food-cover" @click="toggleShow"></div>
+    </transition>
+
   </div>
 </template>
 
@@ -183,6 +188,13 @@
       left: 0;
       z-index: 55;
       background-color: rgba(0, 0, 0, 0.5);
+      &.fade-enter-active,&.fade-leave-active{
+        transition: all 0.2s;
+        opacity: 1;
+      }
+      &.fade-enter, &.fade-leave-to{
+        opacity: 0
+      }
     }
   }
 </style>

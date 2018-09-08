@@ -11,7 +11,9 @@ import {
   RECEIVE_RATINGS,
   RECEIVE_GOODS,
   INCREMENT_FOOD_COUNT,
-  DECREMENT_FOOD_COUNT
+  DECREMENT_FOOD_COUNT,
+  CLEAR_CART,
+  RECEIVE_SEARCH_SHOPS
 } from './mutation-types'
 import {
   reqAddress,
@@ -21,7 +23,8 @@ import {
   reqLogout,
   reqShopInfo,
   reqShopRatings,
-  reqShopGoods
+  reqShopGoods,
+  reqSearchShops
 } from '../api/index'
 export default {
   // 异步获取地址
@@ -80,16 +83,16 @@ export default {
     if (result.code === 0) {
       const info = result.data
       info.score = 3.5
-      console.log(result)
       commit(RECEIVE_INFO, {info})
     }
   },
   // 异步获取商家评价列表
-  async getShopRatings ({commit}) {
+  async getShopRatings ({commit}, cb) {
     const result = await reqShopRatings()
     if (result.code === 0) {
       const ratings = result.data
       commit(RECEIVE_RATINGS, {ratings})
+      if (cb) cb() // 当数据获取到后进行回调
     }
   },
   // 异步获取商家商品列表
@@ -101,11 +104,24 @@ export default {
       if (cb) cb() // 当数据获取到后进行回调
     }
   },
+  // 异步获取搜索商家商品列表
+  async getSearchShops ({commit, state}, keyword) {
+    const {latitude, longitude} = state
+    const geohash = latitude + ',' + longitude
+    const result = await reqSearchShops(keyword, geohash)
+    if (result.code === 0) {
+      const searchShops = result.data
+      commit(RECEIVE_SEARCH_SHOPS, {searchShops})
+    }
+  },
   updateFoodCount ({commit}, {food, _flag}) {
     if (_flag) {
       commit(DECREMENT_FOOD_COUNT, {food})
     } else {
       commit(INCREMENT_FOOD_COUNT, {food})
     }
+  },
+  clearCart ({commit}) {
+    commit(CLEAR_CART)
   }
 }
